@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2025-11-21 Fri 11:51 -->
+<!-- 2025-11-22 Sat 19:05 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>TVL and Active Developers</title>
@@ -211,6 +211,38 @@ if("undefined"==typeof jQuery)throw new Error("Bootstrap's JavaScript requires j
 <script type="text/javascript">
 $(function() {    $('.note').before("<p class='admonition-title note'>Note</p>");    $('.seealso').before("<p class='admonition-title seealso'>See also</p>");    $('.warning').before("<p class='admonition-title warning'>Warning</p>");    $('.caution').before("<p class='admonition-title caution'>Caution</p>");    $('.attention').before("<p class='admonition-title attention'>Attention</p>");    $('.tip').before("<p class='admonition-title tip'>Tip</p>");    $('.important').before("<p class='admonition-title important'>Important</p>");    $('.hint').before("<p class='admonition-title hint'>Hint</p>");    $('.error').before("<p class='admonition-title error'>Error</p>");    $('.danger').before("<p class='admonition-title danger'>Danger</p>");});$( document ).ready(function() {        $(document).on('click', "[data-toggle='wy-nav-top']", function() {      $("[data-toggle='wy-nav-shift']").toggleClass("shift");      $("[data-toggle='rst-versions']").toggleClass("shift");    });        $(document).on('click', ".wy-menu-vertical .current ul li a", function() {      $("[data-toggle='wy-nav-shift']").removeClass("shift");      $("[data-toggle='rst-versions']").toggleClass("shift");    });    $(document).on('click', "[data-toggle='rst-current-version']", function() {      $("[data-toggle='rst-versions']").toggleClass("shift-up");    });        $("table.docutils:not(.field-list)").wrap("<div class='wy-table-responsive'></div>");});$( document ).ready(function() {    $('#text-table-of-contents ul').first().addClass('nav');    $('body').scrollspy({target: '#text-table-of-contents'});            var $postamble = $('#postamble');    var $tableOfContents = $('#table-of-contents');    $tableOfContents.css({paddingBottom: $postamble.outerHeight()});        var toggleSidebar = $('<div id="toggle-sidebar"><a href="#table-of-contents"><h2>Table of Contents</h2></a></div>');    $('#content').prepend(toggleSidebar);        var closeBtn = $('<a class="close-sidebar" href="#">Close</a>');    var tocTitle = $('#table-of-contents').find('h2');    tocTitle.append(closeBtn);});window.SphinxRtdTheme = (function (jquery) {    var stickyNav = (function () {        var navBar,            win,            stickyNavCssClass = 'stickynav',            applyStickNav = function () {                if (navBar.height() <= win.height()) {                    navBar.addClass(stickyNavCssClass);                } else {                    navBar.removeClass(stickyNavCssClass);                }            },            enable = function () {                applyStickNav();                win.on('resize', applyStickNav);            },            init = function () {                navBar = jquery('nav.wy-nav-side:first');                win    = jquery(window);            };        jquery(init);        return {            enable : enable        };    }());    return {        StickyNav : stickyNav    };}($));
 </script>
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
 </head>
 <body>
 <div id="content" class="content">
@@ -219,72 +251,57 @@ $(function() {    $('.note').before("<p class='admonition-title note'>Note</p>")
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org0ffb3df">1. TVL and Active Developers Multisort Portfolios</a></li>
+<li><a href="#orgbbf7807">1. TVL and Active Developers Multisort Portfolios</a></li>
+<li><a href="#orgb4d1654">2. Joint Tests for Significant Alpha</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org0ffb3df" class="outline-2">
-<h2 id="org0ffb3df"><span class="section-number-2">1.</span> TVL and Active Developers Multisort Portfolios</h2>
-<div class="outline-text-2" id="text-1">
-<div class="org-src-container">
-<pre class="src src-python">import pandas as pd
-from scipy import stats
-import statsmodels.api as sm
-from statsmodels.tsa.stattools import adfuller
-import matplotlib.pyplot as plt
-plt.style.use("dark_background")
-</pre>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-python">portfolios = pd.read_pickle("../../../../../1_data/tvl_multisort_data/multi_sort_factors_port_returns/tvl/tvl_and_devs/tvl_dev_multisort.pkl")
-portfolios.describe()
-portfolios.dtypes
-
-multi_SMB = 1/3 * (portfolios["SL"].values + portfolios["SM"].values + portfolios["SH"].values) - 1/3 * (portfolios["BL"].values + portfolios["BM"].values + portfolios["BH"].values)
-multi_SMB = pd.DataFrame(multi_SMB, index = portfolios.index)
-multi_SMB.index = pd.to_datetime(multi_SMB.index)
-# stats.ttest_1samp(multi_SMB, popmean=0)
-# TtestResult(statistic=array([0.53833265]), pvalue=array([0.59099104]), df=array([186]))
-
-multi_HML = 1/2 * (portfolios["SH"].values + portfolios["BH"].values) - 1/2 * (portfolios["SL"].values + portfolios["BL"].values)
-multi_HML = pd.DataFrame(multi_HML, index = portfolios.index)
-multi_HML.index = pd.to_datetime(multi_HML.index)
-# stats.ttest_1samp(multi_HML, popmean=0)
-</pre>
-</div>
+<p>
+Because TVL measures investment in an ecosystem, it is often viewed as a measure of trust.  Greater trust, it is thought, should increase the cryptocurrency's price.  TVL may also affect prices through investment in value channels.
+</p>
 
 <p>
-Below are charts for 2x3 multisorted portfolios.
+Fama and French (2015)<sup><a id="fnr.1" class="footref" href="#fn.1" role="doc-backlink">1</a></sup> found firms which invest more aggressively tend to earn lower returns.  Since TVL to market cap may be viewed as an investment intensity factor, there may be a similar effect in crypto.  TVL to market cap may also be a value measure which signals future growth.  Liu, Tsyvinski, and Wu found evidence of a value effect in crypto using a price to new address ratio.
+</p>
+
+<p>
+However using TVL sorted portfolios, Brigida (2025)<sup><a id="fnr.2" class="footref" href="#fn.2" role="doc-backlink">2</a></sup> found no evidence for an investment intensity or value effect for TVL alone.  Therefore, in a series of blog posts I'll test whether portfolios sorted on both TVL and other factors can proxy for an investment or value effect.  Specifically, I test the multisort portfolios for significant alpha in regression on excess crypto market returns, and a crypto size factor.
+</p>
+<div id="outline-container-orgbbf7807" class="outline-2">
+<h2 id="orgbbf7807"><span class="section-number-2">1.</span> TVL and Active Developers Multisort Portfolios</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+In my tests I follow the standard Fama–French 2×3 portfolio construction, adapted to crypto. Each period I rank all eligible tokens on two characteristics measured in the prior period: total value locked (TVL) and the number of active developers (scaled by market cap). First, I split tokens into Small TVL and Big TVL groups using the median TVL. Independently, I sort tokens into three developer-activity groups — Low, Medium, and High devs — using the 30th and 70th percentiles of the developer measure. Taking the intersection of these two independent sorts gives six portfolios: Small–Low (SL), Small–Medium (SM), Small–High (SH), Big–Low (BL), Big–Medium (BM), and Big–High (BH). I then track the value-weighted returns of these six portfolios over the next period. This 2×3 design lets me see how returns vary jointly with TVL and developer activity, and then build long–short factors (e.g., high-minus-low devs controlling for TVL) to test whether these characteristics earn a risk premium.
+</p>
+</div>
+<div id="outline-container-org1b9e9cf" class="outline-3">
+<h3 id="org1b9e9cf"><span class="section-number-3">1.1.</span> TVL (size) factor: Small minus Big (SMB)</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+\[\text{SMB}_t = \frac{1}{3}\bigl(R_{SL,t} + R_{SM,t} + R_{SH,t}\bigr) - \frac{1}{3}\bigl(R_{BL,t} + R_{BM,t} + R_{BH,t}\bigr)\]
 </p>
 
 
-<div class="org-src-container">
-<pre class="src src-python">multi_SMB.cumsum().plot()
-plt.title("TVL/Dev SMB Multisort Cumulative Returns")
-plt.savefig("multi_SMB.png")
-</pre>
-</div>
-
-
-<div id="orgafc088f" class="figure">
+<div id="orgd376fd0" class="figure">
 <p><img src="./multi_SMB.png" alt="multi_SMB.png" />
 </p>
 </div>
-
-
-<div class="org-src-container">
-<pre class="src src-python">multi_HML.cumsum().plot()
-plt.title("TVL/Dev HML Multisort Cumulative Returns")
-plt.savefig("multi_HML.png")
-</pre>
 </div>
+</div>
+<div id="outline-container-orgd3a64eb" class="outline-3">
+<h3 id="orgd3a64eb"><span class="section-number-3">1.2.</span> Devs factor: High devs minus Low devs (HML), neutral to TVL</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+\[\text{DEV}_t = \frac{1}{2}\bigl(R_{SH,t} + R_{BH,t}\bigr) - \frac{1}{2}\bigl(R_{SL,t} + R_{BL,t}\bigr)\]
+</p>
 
 
-<div id="org53cafa6" class="figure">
+<div id="orgfb3d282" class="figure">
 <p><img src="./multi_HML.png" alt="multi_HML.png" />
 </p>
 </div>
+
+
 
 
 <p>
@@ -293,9 +310,46 @@ The TVL and Developer SMB portfolio has a mean annualized return of 9.93% and a 
 </div>
 </div>
 </div>
+<div id="outline-container-orgb4d1654" class="outline-2">
+<h2 id="orgb4d1654"><span class="section-number-2">2.</span> Joint Tests for Significant Alpha</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+To test whether my TVL–developer portfolios earn any abnormal returns (alpha), I use a standard linear factor model and Hansen’s J-statistic<sup><a id="fnr.3" class="footref" href="#fn.3" role="doc-backlink">3</a></sup> for a joint alpha test.
+</p>
+
+<p>
+I start from a 2×3 sort on lagged total value locked (TVL) and active developers (both scaled by market cap), which gives me a small set of test portfolios. For each portfolio, I ask whether its average excess return can be explained by two simple crypto risk factors:
+	​
+\(R_{M_t} - R_{F_t}\): excess return on the broad crypto market
+</p>
+
+<p>
+\(SMB_t\): a “small minus big” size factor that goes long small-cap tokens and short large-cap tokens
+</p>
+</div>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1" role="doc-backlink">1</a></sup> <div class="footpara" role="doc-footnote"><p class="footpara">
+Fama, E. F., &amp; French, K. R. (2015). A five-factor asset pricing model. Journal of financial economics, 116(1), 1-22. 
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.2" class="footnum" href="#fnr.2" role="doc-backlink">2</a></sup> <div class="footpara" role="doc-footnote"><p class="footpara">
+Brigida, Matthew (2025), "The surprising irrelevance of total-value-locked on cryptocurrency returns," <i>Economics Letters</i>, Vol 257. 
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.3" class="footnum" href="#fnr.3" role="doc-backlink">3</a></sup> <div class="footpara" role="doc-footnote"><p class="footpara">
+Hansen, Lars Peter (1982), "Large Sample Properties of Generalized Method of Moments Estimators," <i>Econometrica</i>. 
+</p></div></div>
+
+
+</div>
+</div></div>
 <div id="postamble" class="status">
 <p class="author">Author: Matt Brigida</p>
-<p class="date">Created: 2025-11-21 Fri 11:51</p>
+<p class="date">Created: 2025-11-22 Sat 19:05</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
