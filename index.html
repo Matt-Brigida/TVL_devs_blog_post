@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2025-11-22 Sat 19:05 -->
+<!-- 2025-11-22 Sat 19:23 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>TVL and Active Developers</title>
@@ -251,8 +251,8 @@ $(function() {    $('.note').before("<p class='admonition-title note'>Note</p>")
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgbbf7807">1. TVL and Active Developers Multisort Portfolios</a></li>
-<li><a href="#orgb4d1654">2. Joint Tests for Significant Alpha</a></li>
+<li><a href="#org97d59db">1. TVL and Active Developers Multisort Portfolios</a></li>
+<li><a href="#org3423e88">2. Joint Tests for Significant Alpha</a></li>
 </ul>
 </div>
 </div>
@@ -267,36 +267,69 @@ Fama and French (2015)<sup><a id="fnr.1" class="footref" href="#fn.1" role="doc-
 <p>
 However using TVL sorted portfolios, Brigida (2025)<sup><a id="fnr.2" class="footref" href="#fn.2" role="doc-backlink">2</a></sup> found no evidence for an investment intensity or value effect for TVL alone.  Therefore, in a series of blog posts I'll test whether portfolios sorted on both TVL and other factors can proxy for an investment or value effect.  Specifically, I test the multisort portfolios for significant alpha in regression on excess crypto market returns, and a crypto size factor.
 </p>
-<div id="outline-container-orgbbf7807" class="outline-2">
-<h2 id="orgbbf7807"><span class="section-number-2">1.</span> TVL and Active Developers Multisort Portfolios</h2>
+<div id="outline-container-org97d59db" class="outline-2">
+<h2 id="org97d59db"><span class="section-number-2">1.</span> TVL and Active Developers Multisort Portfolios</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 In my tests I follow the standard Fama–French 2×3 portfolio construction, adapted to crypto. Each period I rank all eligible tokens on two characteristics measured in the prior period: total value locked (TVL) and the number of active developers (scaled by market cap). First, I split tokens into Small TVL and Big TVL groups using the median TVL. Independently, I sort tokens into three developer-activity groups — Low, Medium, and High devs — using the 30th and 70th percentiles of the developer measure. Taking the intersection of these two independent sorts gives six portfolios: Small–Low (SL), Small–Medium (SM), Small–High (SH), Big–Low (BL), Big–Medium (BM), and Big–High (BH). I then track the value-weighted returns of these six portfolios over the next period. This 2×3 design lets me see how returns vary jointly with TVL and developer activity, and then build long–short factors (e.g., high-minus-low devs controlling for TVL) to test whether these characteristics earn a risk premium.
 </p>
 </div>
-<div id="outline-container-org1b9e9cf" class="outline-3">
-<h3 id="org1b9e9cf"><span class="section-number-3">1.1.</span> TVL (size) factor: Small minus Big (SMB)</h3>
+<div id="outline-container-org968fa6d" class="outline-3">
+<h3 id="org968fa6d"><span class="section-number-3">1.1.</span> TVL (size) factor: Small minus Big (SMB)</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 \[\text{SMB}_t = \frac{1}{3}\bigl(R_{SL,t} + R_{SM,t} + R_{SH,t}\bigr) - \frac{1}{3}\bigl(R_{BL,t} + R_{BM,t} + R_{BH,t}\bigr)\]
 </p>
 
+<p>
+Descriptive statistics.  Data is weekly, and in percentage points.
+</p>
 
-<div id="orgd376fd0" class="figure">
+<pre class="example">
+count  187.000000
+mean     0.191646
+std      4.868212
+min    -20.037502
+25%     -2.462750
+50%      0.771121
+75%      2.462813
+max     21.636350
+</pre>
+
+
+
+<div id="orgc9f2daf" class="figure">
 <p><img src="./multi_SMB.png" alt="multi_SMB.png" />
 </p>
 </div>
 </div>
 </div>
-<div id="outline-container-orgd3a64eb" class="outline-3">
-<h3 id="orgd3a64eb"><span class="section-number-3">1.2.</span> Devs factor: High devs minus Low devs (HML), neutral to TVL</h3>
+<div id="outline-container-org6a17837" class="outline-3">
+<h3 id="org6a17837"><span class="section-number-3">1.2.</span> Devs factor: High devs minus Low devs (HML), neutral to TVL</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 \[\text{DEV}_t = \frac{1}{2}\bigl(R_{SH,t} + R_{BH,t}\bigr) - \frac{1}{2}\bigl(R_{SL,t} + R_{BL,t}\bigr)\]
 </p>
 
+<p>
+Descriptive statistics.  Data is weekly, and in percentage points.
+</p>
 
-<div id="orgfb3d282" class="figure">
+<pre class="example">
+count  187.000000
+mean     0.302888
+std      8.380829
+min    -27.978738
+25%     -4.631547
+50%     -1.053222
+75%      5.227551
+max     28.816085
+</pre>
+
+
+
+
+<div id="orgd32b4bf" class="figure">
 <p><img src="./multi_HML.png" alt="multi_HML.png" />
 </p>
 </div>
@@ -310,8 +343,8 @@ The TVL and Developer SMB portfolio has a mean annualized return of 9.93% and a 
 </div>
 </div>
 </div>
-<div id="outline-container-orgb4d1654" class="outline-2">
-<h2 id="orgb4d1654"><span class="section-number-2">2.</span> Joint Tests for Significant Alpha</h2>
+<div id="outline-container-org3423e88" class="outline-2">
+<h2 id="org3423e88"><span class="section-number-2">2.</span> Joint Tests for Significant Alpha</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 To test whether my TVL–developer portfolios earn any abnormal returns (alpha), I use a standard linear factor model and Hansen’s J-statistic<sup><a id="fnr.3" class="footref" href="#fn.3" role="doc-backlink">3</a></sup> for a joint alpha test.
@@ -349,7 +382,7 @@ Hansen, Lars Peter (1982), "Large Sample Properties of Generalized Method of Mom
 </div></div>
 <div id="postamble" class="status">
 <p class="author">Author: Matt Brigida</p>
-<p class="date">Created: 2025-11-22 Sat 19:05</p>
+<p class="date">Created: 2025-11-22 Sat 19:23</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
